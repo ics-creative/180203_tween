@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>micro interaction</title>
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+      }
+      div {
+          width: 750px;
+          height: 405px;
+          margin: 0 auto;
+          background-color: #fbf9eb;
+      }
+      img {
+          position: absolute;
+          top: 100;
+          left: 200;
+      }
+    </style>
+</head>
+<body>
+    <div>
+        <img id="mitarashi" src="images/mitarashi_200.png">
+    </div>
+    
+    <script>
+        var target = document.getElementById("mitarashi"); // アニメーションの対象
+        var start = 100; // 初期値
+        var end  = 550; // 目的値
+        var value = end - start; // 変化量
+        var startTime = new Date().getTime(); // 開始時間 (ミリ秒)
+        var time = 1000; // 変化にかける時間 (ミリ秒)
+        
+        function update() {
+            var nowTime = new Date().getTime(); // 現在の時間 (ミリ秒)
+            var progress = (nowTime - startTime) / time; // 進捗率（経過時間 / 変化にかける時間）
+            
+            // 進捗率が1以下になるように丸める
+            progress = Math.min(progress, 1);
+            
+            // 初期値に進捗率に沿った変化量を加える
+            target.style.left = start + value * progress;
+            
+            // 進捗率が100%になったらアップデートを終了する
+            if (progress == 1) {
+                clearInterval(updater);
+            }
+        }
+
+        // 1秒に60回アップデートを実行する
+        var updater = setInterval(function() {
+            update();
+        }, 1000 / 60);
+  </script>
+</body>
+</html>
