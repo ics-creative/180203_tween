@@ -45,9 +45,9 @@
       progress = Math.min(progress, 1);
 
       // 値を算出し反映する
-      var resultX = startX + diffX * progress; // X座標
-      var resultY = startY + diffY * progress; // Y座標
-      target.style.transform = 'translate(' + resultX + 'px, ' + resultY + 'px)';
+      const resultX = startX + diffX * progress; // X座標
+      const resultY = startY + diffY * progress; // Y座標
+      target.style.transform = `translate( ${resultX}px, ${resultY}px )`;
 
       // 進捗が1未満の場合はアップデートを再実行する
       if (progress < 1) {

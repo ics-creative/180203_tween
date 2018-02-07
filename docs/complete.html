@@ -58,9 +58,9 @@
         
         // 進捗率がプラスの場合のみ値を算出し反映する
         if (progress >= 0) {
-          var resultX = startX + diffX * progress; // X座標
-          var resultY = startY + diffY * progress; // Y座標
-          target.style.transform = 'translate(' + resultX + 'px, ' + resultY + 'px)';
+          const resultX = startX + diffX * progress; // X座標
+          const resultY = startY + diffY * progress; // Y座標
+          target.style.transform = `translate( ${resultX}px, ${resultY}px )`;
         }
         
         // 進捗が1未満の場合はアップデートを再実行する
