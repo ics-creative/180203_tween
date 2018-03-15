@@ -1,0 +1,149 @@
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Animation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    div {
+      width: 750px;
+      height: 405px;
+      background-color: #fbf9eb;
+    }
+    img {
+      transform: translate(50px, 50px);
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <img id="mitarashi" src="images/mitarashi_200.png">
+  </div>
+
+  <script>
+    // みたらしくんを1秒後に1秒かけて座標(500, 150)へ、加速〜減速しながらアニメーションさせる
+    animateTranslate('mitarashi', 1000, "easeInOutExpo", 500, 150, 1000);
+    
+    /**
+     * 対象オブジェクトをアニメーションして移動させます。
+     * @param {string} targetID スクロール時間のミリ秒です。
+     * @param {number} time アニメーションさせる時間です（ミリ秒）。
+     * @param {number} endX X座標の目標値です。
+     * @param {number} endY Y座標の目標値です。
+     * @param {number} delay アニメーションを開始するまでの遅延時間です（ミリ秒）。
+     */
+    function animateTranslate(targetID, time, easing, endX, endY, delay) {
+      const target = document.getElementById(targetID); // アニメーションの対象
+      const style = getComputedStyle(target); // 対象のスタイルを取得
+      const reg = /matrix\((.*)\)/; // 不要な文字列を取り除くための正規表現
+      const transform = style.transform.match(reg)[1].split(','); // transform を配列として取得
+      const startX = parseFloat(transform[4]); // X座標の始点
+      const startY = parseFloat(transform[5]); // Y座標の始点
+      const diffX = endX - startX; // X座標の変化量
+      const diffY = endY - startY; // Y座標の変化量
+      const ease = getEasing(easing); // 使用するイージング関数
+      let progress = 0;
+      let easeProgress = 0;
+      let firstTimestanp = 0;
+      
+      // アップデートを実行する
+      requestAnimationFrame(update);
+
+      function update(timestanp) {
+        // 初回設定
+        if (progress === 0) {
+          firstTimestanp = timestanp;
+        }
+        // 遅延時間を含めた進捗率を算出
+        progress = (timestanp - firstTimestanp - delay) / time;
+
+        // 進捗率が100%を超えないよう丸める
+        progress = Math.min(progress, 1);
+        
+        // 進捗率がプラスの場合のみ値を算出し反映する
+        if (progress >= 0) {
+          easeProgress = ease(progress, 0, 1, 1); // 進捗率からイージング関数を通した変化割合を算出
+          const resultX = startX + diffX * easeProgress; // X座標
+          const resultY = startY + diffY * easeProgress; // Y座標
+          target.style.transform = `translate( ${resultX}px, ${resultY}px )`;
+        }
+        
+        // 進捗が1未満の場合はアップデートを再実行する
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+        // ループ処理
+        else {
+          setTimeout(function() {
+            target.style.transform = `translate(50px, 50px)`;
+            animateTranslate('mitarashi', 1000, 'easeInOutExpo', 500, 150, 1000);
+          }, 1000);
+        }
+      }
+    }
+      
+    /*
+     *
+     * TERMS OF USE - EASING EQUATIONS
+     * 
+     * Open source under the BSD License. 
+     * 
+     * Copyright © 2001 Robert Penner
+     * All rights reserved.
+     * 
+     * Redistribution and use in source and binary forms, with or without modification, 
+     * are permitted provided that the following conditions are met:
+     * 
+     * Redistributions of source code must retain the above copyright notice, this list of 
+     * conditions and the following disclaimer.
+     * Redistributions in binary form must reproduce the above copyright notice, this list 
+     * of conditions and the following disclaimer in the documentation and/or other materials 
+     * provided with the distribution.
+     * 
+     * Neither the name of the author nor the names of contributors may be used to endorse 
+     * or promote products derived from this software without specific prior written permission.
+     * 
+     * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+     * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+     *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+     *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+     *  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
+     * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+     * OF THE POSSIBILITY OF SUCH DAMAGE. 
+     *
+     */
+    
+    /**
+     * イージング関数を取得します。
+     * @param {number} easingName イージング関数の名称です。
+     */
+    function getEasing(easingName) {
+      let ease;
+      switch (easingName) {
+        // t: current time, b: begInnIng value, c: change In value, d: duration
+        case "easeInExpo": ease = function (t, b, c, d) {
+            return (t == 0) ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
+          }
+          break;
+        case "easeOutExpo": ease = function (t, b, c, d) {
+            return (t == d) ? b + c: c * (-Math.pow(2, -10 * t / d) + 1) + b;
+          }
+          break;
+        case "easeInOutExpo": ease = function (t, b, c, d) {
+            if (t == 0) return b;
+            if (t == d) return b + c;
+            if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+            return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+          }
+          break;
+      }
+      return ease;
+    }
+  </script>
+</body>
+</html>
