@@ -21,14 +21,6 @@
 <body>
   <div>
     <img id="mitarashi" src="images/mitarashi_200.png">
-    
-<!--
-    <select id="selectEase">
-      <option value="easeInExpo">easeInExpo</option>
-      <option value="easeOutExpo">easeOutExpo</option>
-      <option value="easeInOutExpo">easeInOutExpo</option>
-    </select>
--->
   </div>
 
   <script>
@@ -68,9 +60,9 @@
       let diffBrightness = 0; // 明るさの変化量
       
       // フィルターアニメーションを使用する場合
-      if (filters != null) {
+      if (filters !== null) {
         // 対象にフィルターが設定されている場合
-        if (styleFilter != 'none') {
+        if (styleFilter !== 'none') {
           // フィルターの始点の設定
           if (styleFilter.includes('blur')) {
             startBlur = parseFloat(styleFilter.match(regBlur)[1]);
@@ -107,7 +99,7 @@
           target.style.transform = `translate( ${resultX}px, ${resultY}px )`;
           
           // フィルター
-          if (filters != null) {
+          if (filters !== null) {
             let resultFilter = '';
             
             // 各フィルターの値を算出
@@ -116,8 +108,6 @@
             
             // フィルターの値を反映
             target.style.filter = resultFilter;
-      
-      console.log(target.style.filter);
           }
         }
         
@@ -126,17 +116,6 @@
           requestAnimationFrame(update);
         }
       }
-    
-//      const selectEase = document.getElementById('selectEase'); 
-//      selectEase.addEventListener('change', onChange);
-//
-//      function onChange() {
-//        target.style.transform = `translate(50px, 50px)`;
-//        
-//        const request = requestAnimationFrame(function(){
-//          animateTranslate('mitarashi', 1000, selectEase.value, 500, 150, 1000, {blur: 10, brightness: 2.0});
-//        });
-//      }
     }
     
     /*
