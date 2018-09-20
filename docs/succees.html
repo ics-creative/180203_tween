@@ -37,9 +37,9 @@
     // アップデートを実行する
     requestAnimationFrame(update);
 
-    function update(timestanp) {
+    function update(timestamp) {
       // 進捗率を算出
-      progress = timestanp / time;
+      progress = timestamp / time;
 
       // 進捗率が100%を超えないよう丸める
       progress = Math.min(progress, 1);

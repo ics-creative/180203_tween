@@ -49,7 +49,7 @@
       const ease = getEasing(easing); // 使用するイージング関数
       let progress = 0;
       let easeProgress = 0;
-      let firstTimestanp = 0;
+      let firstTimestamp = 0;
       
       // フィルター関連の変数の宣言
       const styleFilter = style.filter; // 対象の設定されているフィルターを取得
@@ -84,14 +84,14 @@
       // アップデートを実行する
       requestAnimationFrame(update);
 
-      function update(timestanp) {
+      function update(timestamp) {
         // 初回設定
         if (progress === 0) {
-          firstTimestanp = timestanp;
+          firstTimestamp = timestamp;
         }
         
         // 遅延時間を含めた進捗率を算出
-        progress = (timestanp - firstTimestanp - delay) / time;
+        progress = (timestamp - firstTimestamp - delay) / time;
 
         // 進捗率が100%を超えないよう丸める
         progress = Math.min(progress, 1);
